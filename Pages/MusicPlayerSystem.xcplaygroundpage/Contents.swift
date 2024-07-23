@@ -2,51 +2,49 @@
 
 import Foundation
 
-// Music Player
-/// Suppose an array of n number of songs is given
-/// Play songs as per provided reuirement
-/// 1. Songs should not repeat
-/// 2. Songs should be played at random
-/// 3. We should be able to view the history of song played
+// Problem: Music Player
+// Objective: Create a MusicPlayer class in Swift that manages a playlist of songs, ensuring that each song is played exactly once in a random order. The class should also be able to display the history of played songs.
 
 class MusicPlayer {
-    var songList: [String] = ["Bohemian Rhapsody",
-                              "Imagine",
-                              "Hallelujah",
-                              "Hotel California",
-                              "Hey Jude",
-                              "Like a Rolling Stone",
-                              "Respect",
-                              "A Whiter Shade of Pale",
-                              "Yesterday",
-                              "Blowin in the Wind"]
+    var songs: [String]
+    var currentSize: Int
     
-//    func playSong() {
-//        var songCount = 0
-//
-//        while songCount != songList.count {
-//
-//            let randomIndex = Int.random(in: 0..<songList.count)
-//            print("Song: \"\(songList[randomIndex])\" played at Index \(randomIndex)")
-//            songList.swapAt(randomIndex, songList.count - 1)
-//
-//            print("Updated list: \(songList)")
-//
-//            songCount += 1
-//        }
-//    }
+    init(songs: [String]) {
+        self.songs = songs.shuffled()
+        self.currentSize = songs.count
+    }
     
-    func playSong() {
-        print(songList.sorted())
-        for i in 0..<songList.count {
-            print("Song: \"\(songList[i])\" played at Index \(i)")
-            songList.swapAt(i, songList.count - i - 1)
-            print("Updated List:", songList[songList.count - i - 1])
+    func playNextSong() -> String? {
+        guard !songs.isEmpty else {
+            print("All songs have been played.")
+            return nil
         }
+        
+        let randomIndex = Int.random(in: 0..<currentSize)
+        let songToPlay = songs[randomIndex]
+        
+        // Swap values with last index
+        songs.swapAt(randomIndex, currentSize - 1)
+        
+        currentSize -= 1
+        print("Playing: \(songToPlay)")
+        return songToPlay
+    }
+    
+    func showHistory() {
+        print("Played songs history: \(songs.suffix(songs.count - currentSize))")
     }
 }
 
-let musicPlayer = MusicPlayer()
-//musicPlayer.playSong()
-//            playList.swapAt(index, playList.count - 1)
+let numberOfSongs = 1...100
+// Creating array of 10 songs
+let songs = numberOfSongs.map { "song\($0)" }
+let musicPlayer = MusicPlayer(songs: songs)
+
+// Simulating playing songs
+for _ in numberOfSongs {
+    musicPlayer.playNextSong()
+}
+
+musicPlayer.showHistory()
 
